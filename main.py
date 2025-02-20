@@ -24,7 +24,7 @@ def first_step(prompt):
 
 # second step of thinking 
 def second_step(prompt, firstresponse): 
-    secondprompt = f"Based on the chain of thoughts, write a response to the user's answer. \n User Prompt: {prompt}\n chain of thoughts: {firstresponse}"
+    secondprompt = f"Based on the chain of thoughts, write a response to the user's answer. \n User Prompt: {prompt}\n chain of thoughts: {firstrep}"
 
     secondrep = openai.ChatCompletion.create(
         model="gpt-4o-mini",
