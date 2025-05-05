@@ -1,2 +1,3 @@
 # cotPrototype
-simple COT (chain of thoughts) logic in gpt-4o mini 
+simple COT (chain of thoughts) logic in LLM gpt-4o mini 
+
