@@ -88,7 +88,7 @@ The behavior of the assistant can be customized via constructor arguments:
 Run the module directly to prompt via standard input:
 
 ```bash
-python chain_of_thought_assistant.py
+python main.py
 ```
 
 You will be prompted to enter your question. The assistant prints both the chain-of-thought and final answer.
