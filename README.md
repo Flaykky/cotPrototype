@@ -44,8 +44,8 @@ This approach improves transparency and traceability of the model's reasoning pr
 1. **Clone the repository** (or copy the module file into your project):
 
    ```bash
-   git clone https://github.com/your-org/chain-of-thought-assistant.git
-   cd chain-of-thought-assistant
+   https://github.com/Flaykky/cotPrototype
+   cd cotPrototype
    ```
 
 2. **Install dependencies**:
