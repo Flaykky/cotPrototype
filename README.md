@@ -1,5 +1,5 @@
 # cotPrototype
-prototype of the COT (chain of thoughts) logic in LLM gpt-4o mini 
+prototype of the COT (chain of thoughts) logic in the LLM gpt-4o mini 
 
 # ChainOfThoughtAssistant Documentation
 
