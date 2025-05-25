@@ -4,15 +4,17 @@ import logging
 from typing import Tuple
 
 import openai
-from openai.error import OpenAIError
+from openai import OpenAI, OpenAIError
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize API key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load API key from environment
+API_KEY = os.getenv("OPENAI_API_KEY")
+if not API_KEY:
+    raise ValueError("Please set the OPENAI_API_KEY environment variable.")
 
 class ChainOfThoughtAssistant:
     """
@@ -27,6 +29,8 @@ class ChainOfThoughtAssistant:
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.system_prompt = "You are a powerful assistant."
+        # Initialize the OpenAI client
+        self.client = OpenAI(api_key=API_KEY)
 
     @retry(
         retry=retry_if_exception_type(OpenAIError),
@@ -34,8 +38,7 @@ class ChainOfThoughtAssistant:
         stop=stop_after_attempt(3)
     )
     def _chat_completion(self, messages: list) -> str:
-        """Internal helper that calls the ChatCompletion endpoint with retries."""
-        response = openai.ChatCompletion.create(
+        response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             max_tokens=self.max_tokens,
