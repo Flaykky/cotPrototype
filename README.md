@@ -1,5 +1,5 @@
 
-🧠 Chain of Thought Assistant (CoT) – Documentation
+🧠 Chain of Thought prototype (CoT) – Documentation
 
 Overview
 
