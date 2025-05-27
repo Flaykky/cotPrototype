@@ -1,240 +1,147 @@
-# cotPrototype
-prototype of the COT (chain of thoughts) logic in the LLM gpt-4o mini 
 
-# ChainOfThoughtAssistant Documentation
+🧠 Chain of Thought Assistant (CoT) – Documentation
 
-## Overview
+Overview
 
-The **ChainOfThoughtAssistant** is a Python module designed to simplify and standardize a two-step reasoning process when interacting with OpenAI's ChatCompletion API:
+The Chain of Thought Assistant is a prototype built on top of the OpenAI API that leverages structured prompt engineering to produce more thoughtful and accurate responses. It does so by splitting the response process into two distinct steps:
+	1.	Chain of Thought (CoT) Generation – Think step-by-step through the user prompt.
+	2.	Final Answer Generation – Use the reasoning generated in step 1 to craft a complete and coherent final answer.
 
-1. **Chain-of-Thought Generation**: Generate a step-by-step reasoning outline without revealing the final answer.
-2. **Final Answer Generation**: Produce a coherent and complete response based on the previously generated chain of thought.
+This separation encourages deeper reasoning and often leads to higher-quality responses.
 
-This approach improves transparency and traceability of the model's reasoning process, and enables better error handling through retries and logging.
+⸻
 
----
+📦 Features
+	•	Synchronous and asynchronous operation
+	•	Configurable via CoTConfig dataclass
+	•	Built-in retry mechanism using tenacity
+	•	Logging support for tracing and debugging
+	•	Structured prompts to guide reasoning and response generation
 
-## Table of Contents
+⸻
 
-* [Installation](#installation)
-* [Configuration](#configuration)
-* [Usage](#usage)
+🔧 How It Works
 
-  * [Command Line Interface](#command-line-interface)
-  * [Programmatic API](#programmatic-api)
-* [API Reference](#api-reference)
+Step 1: Chain of Thought Generation
 
-  * [Class: ChainOfThoughtAssistant](#class-chainofthoughtassistant)
+Given a user prompt, the assistant first requests the model to think step by step, but not to provide the final answer. This allows the model to lay out logical reasoning or sub-steps that clarify the thought process.
 
-    * [`__init__`](#init)
-    * [`answer`](#answer)
-    * [`generate_chain_of_thought`](#generate_chain_of_thought)
-    * [`generate_answer`](#generate_answer)
-    * [Internal: `_chat_completion`](#internal-_chat_completion)
-* [Error Handling and Retries](#error-handling-and-retries)
-* [Logging](#logging)
-* [Customization](#customization)
-* [Example](#example)
-* [License](#license)
+Template:
 
----
+Please think through the following user's prompt step by step, but do NOT provide the final answer:
+{user_prompt}
 
-## Installation
+This output is stored as the Chain of Thought.
 
-1. **Clone the repository** (or copy the module file into your project):
+⸻
 
-   ```bash
-   https://github.com/Flaykky/cotPrototype
-   cd cotPrototype
-   ```
+Step 2: Final Answer Generation
 
-2. **Install dependencies**:
+Next, the assistant uses the generated chain of thought and combines it with the original user prompt to request a final, polished answer from the model.
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+Template:
 
-   The `requirements.txt` should include:
+Using the following chain of thought, provide a complete and coherent answer to the user's prompt.
 
-   ```text
-   openai>=0.27.0
-   tenacity>=8.2.0
-   ```
+User Prompt: {user_prompt}
 
-3. **Set your API key**:
+Chain of Thought:
+{chain_of_thought}
 
-   ```bash
-   export OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
-   ```
 
----
+⸻
 
-## Configuration
+⚙️ Configuration – CoTConfig
 
-The behavior of the assistant can be customized via constructor arguments:
+You can fine-tune the assistant’s behavior via the CoTConfig dataclass:
 
-| Parameter     | Type    | Default         | Description                                             |
-| ------------- | ------- | --------------- | ------------------------------------------------------- |
-| `model`       | `str`   | `"gpt-4o-mini"` | OpenAI model name to use for prompts.                   |
-| `temperature` | `float` | `0.1`           | Sampling temperature (low values = more deterministic). |
-| `max_tokens`  | `int`   | `500`           | Maximum tokens in the API response.                     |
+Field	Type	Description
+model	str	OpenAI model to use (e.g., gpt-4o-mini)
+temperature	float	Sampling temperature (controls randomness)
+max_tokens	int	Max tokens for each API call
+system_prompt	str	System-level instructions to guide the assistant
+cot_prompt_template	str	Template for generating the chain of thought
+answer_prompt_template	str	Template for generating the final answer
+pause_seconds	float	Optional pause between steps
+retry_attempts	int	Retry attempts for failed API calls
+retry_backoff_max	int	Max backoff duration in retry logic
 
----
 
-## Usage
+⸻
 
-### Command Line Interface
+🚀 Usage
 
-Run the module directly to prompt via standard input:
+Prerequisites
+	•	Python 3.8+
+	•	Set the OPENAI_API_KEY environment variable
 
-```bash
-python main.py
-```
+export OPENAI_API_KEY="your-openai-api-key"
 
-You will be prompted to enter your question. The assistant prints both the chain-of-thought and final answer.
+Running the Assistant
 
-### Programmatic API
+Sync mode:
 
-Import and use in your own scripts:
+python assistant.py
 
-```python
-from chain_of_thought_assistant import ChainOfThoughtAssistant
+Async mode:
 
-assistant = ChainOfThoughtAssistant(
-    model="gpt-4o-mini",
-    temperature=0.2,
-    max_tokens=600
-)
+python assistant.py --async
 
-cot, answer = assistant.answer("Explain quantum entanglement in simple terms.")
-print("Chain of Thought:\n", cot)
-print("Answer:\n", answer)
-```
+Sample Interaction
 
----
+Enter your prompt: Why is the sky blue?
 
-## API Reference
+Output:
 
-### Class: `ChainOfThoughtAssistant`
+--- Chain of Thought ---
+1. Sunlight contains all colors of visible light.
+2. As sunlight passes through the atmosphere, it scatters.
+3. Blue light scatters more than red due to its shorter wavelength.
+4. Hence, we see a blue sky most of the time.
 
-A class encapsulating the full two-step reasoning workflow.
+--- Final Answer ---
+The sky appears blue because molecules in the Earth's atmosphere scatter blue light from the sun more than they scatter red light. This scattering causes the sky to look blue to our eyes.
 
-#### `__init__(self, model: str = "gpt-4o-mini", temperature: float = 0.1, max_tokens: int = 500)`
 
-* **model** (`str`): OpenAI model to use.
-* **temperature** (`float`): Sampling temperature.
-* **max\_tokens** (`int`): Max tokens per completion.
+⸻
 
-Initializes internal settings and system prompt.
+🛠 Internals
 
----
+Retry Logic
 
-#### `answer(self, user_prompt: str, pause: float = 1.0) -> Tuple[str, str]`
+The assistant uses the tenacity library to automatically retry failed OpenAI API requests (e.g., rate limits or transient issues). It retries on OpenAIError exceptions using exponential backoff with jitter.
 
-Executes the full workflow:
+Logging
 
-1. Calls `generate_chain_of_thought` to produce reasoning steps.
-2. Waits for `pause` seconds (for readability/log separation).
-3. Calls `generate_answer` with the chain-of-thought.
+Logs are written to the console with timestamps and log levels to aid in debugging.
 
-**Parameters:**
+⸻
 
-* `user_prompt` (`str`): The user’s query.
-* `pause` (`float`): Delay between steps in seconds.
+📘 Notes and Best Practices
+	•	The chain of thought should not contain the final answer, only reasoning.
+	•	The final answer must rely on and reflect the reasoning provided earlier.
+	•	This approach works especially well for complex, multi-step problems (e.g., math, logic, analysis).
+	•	Adjust temperature to control creativity vs. accuracy.
 
-**Returns:**
+⸻
 
-* Tuple of `(chain_of_thought: str, final_answer: str)`.
+🔄 Async Support
 
----
+The aanswer() method and --async CLI flag allow the assistant to be used in asynchronous workflows, which is useful for integration into web apps or concurrent systems.
 
-#### `generate_chain_of_thought(self, user_prompt: str) -> str`
+⸻
 
-Generates the intermediate reasoning without revealing the final answer.
+📤 API Support
 
-**Parameters:**
+The assistant uses:
+	•	openai.ChatCompletion.create() for sync calls
+	•	openai.ChatCompletion.acreate() for async calls
 
-* `user_prompt` (`str`): The original user prompt.
+Make sure you are using openai SDK version >=0.27.0 to access async features.
 
-**Returns:**
+⸻
 
-* `str`: The generated chain-of-thought text.
+📎 License & Attribution
 
----
+This prototype is built for educational and experimental purposes using the OpenAI API. Respect OpenAI’s Usage Guidelines.
 
-#### `generate_answer(self, user_prompt: str, chain_of_thought: str) -> str`
-
-Produces the final answer using the provided chain-of-thought.
-
-**Parameters:**
-
-* `user_prompt` (`str`): The original user prompt.
-* `chain_of_thought` (`str`): Previously generated reasoning.
-
-**Returns:**
-
-* `str`: The final assistant response.
-
----
-
-#### Internal Method: `_chat_completion(self, messages: list) -> str`
-
-A private helper to call `openai.ChatCompletion.create` with built-in retry logic.
-
-* Decorated with `@retry` from `tenacity` to handle `OpenAIError`.
-* Exponential backoff: up to 3 attempts, delays between 1s and 10s.
-
-**Parameters:**
-
-* `messages` (`list`): List of message dicts as per OpenAI API.
-
-**Returns:**
-
-* `str`: The raw text content of the API response.
-
----
-
-## Error Handling and Retries
-
-* Utilizes the `tenacity` library to retry on `openai.error.OpenAIError`.
-* Configured to attempt up to **3** times with exponential backoff (1s, 2s, 4s...).
-
-## Logging
-
-* Uses Python's built-in `logging` module.
-* INFO-level logs for start/end of each generation phase.
-* Configure logging level or handlers as needed.
-
----
-
-## Customization
-
-* You may extend the class to override prompts, add additional steps, or integrate with other services.
-* Example: subclass to inject a pre-processing step or to hook metrics collection.
-
----
-
-## Example
-
-```python
-if __name__ == "__main__":
-    from chain_of_thought_assistant import ChainOfThoughtAssistant
-
-    assistant = ChainOfThoughtAssistant(
-        model="gpt-4o-mini",
-        temperature=0.05,
-        max_tokens=700
-    )
-    cot, answer = assistant.answer("How does a two-stroke engine work?")
-
-    print("--- Chain of Thought ---")
-    print(cot)
-    print("--- Final Answer ---")
-    print(answer)
-```
-
----
-
-## License
-
-Distributed under the MIT License. See [LICENSE](LICENSE) file for details.
