@@ -1,5 +1,5 @@
 
-🧠 Chain of Thought prototype (CoT) – Documentation
+# Chain of Thought prototype (CoT) – Documentation
 
 Overview
 
@@ -10,8 +10,7 @@ The Chain of Thought Assistant is a prototype built on top of the OpenAI API tha
 This separation encourages deeper reasoning and often leads to higher-quality responses.
 
 ⸻
-
-📦 Features
+## 📦 Features
 	•	Synchronous and asynchronous operation
 	•	Configurable via CoTConfig dataclass
 	•	Built-in retry mechanism using tenacity
@@ -20,7 +19,7 @@ This separation encourages deeper reasoning and often leads to higher-quality re
 
 ⸻
 
-🔧 How It Works
+## How It Works
 
 Step 1: Chain of Thought Generation
 
@@ -51,7 +50,7 @@ Chain of Thought:
 
 ⸻
 
-⚙️ Configuration – CoTConfig
+## ⚙️ Configuration – CoTConfig
 
 You can fine-tune the assistant’s behavior via the CoTConfig dataclass:
 
@@ -69,7 +68,7 @@ retry_backoff_max	int	Max backoff duration in retry logic
 
 ⸻
 
-🚀 Usage
+## Usage
 
 Prerequisites
 	•	Python 3.8+
@@ -105,7 +104,7 @@ The sky appears blue because molecules in the Earth's atmosphere scatter blue li
 
 ⸻
 
-🛠 Internals
+## Internals
 
 Retry Logic
 
@@ -117,7 +116,7 @@ Logs are written to the console with timestamps and log levels to aid in debuggi
 
 ⸻
 
-📘 Notes and Best Practices
+## 📘 Notes and Best Practices
 	•	The chain of thought should not contain the final answer, only reasoning.
 	•	The final answer must rely on and reflect the reasoning provided earlier.
 	•	This approach works especially well for complex, multi-step problems (e.g., math, logic, analysis).
@@ -125,13 +124,13 @@ Logs are written to the console with timestamps and log levels to aid in debuggi
 
 ⸻
 
-🔄 Async Support
+## 🔄 Async Support
 
 The aanswer() method and --async CLI flag allow the assistant to be used in asynchronous workflows, which is useful for integration into web apps or concurrent systems.
 
 ⸻
 
-📤 API Support
+## 📤 API Support
 
 The assistant uses:
 	•	openai.ChatCompletion.create() for sync calls
@@ -141,7 +140,7 @@ Make sure you are using openai SDK version >=0.27.0 to access async features.
 
 ⸻
 
-📎 License & Attribution
+## 📎 License & Attribution
 
 This prototype is built for educational and experimental purposes using the OpenAI API. Respect OpenAI’s Usage Guidelines.
 
