@@ -13,11 +13,11 @@ from tenacity import (
     retry_if_exception_type
 )
 
-# --- Настройка логирования ---
+# --- logging settings ---
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
-# --- Конфигурируемая модель ---
+# --- model ---
 @dataclass
 class CoTConfig:
     model: str = "gpt-4o-mini"
