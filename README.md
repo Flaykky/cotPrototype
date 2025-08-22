@@ -1,5 +1,5 @@
 
-# Chain of Thought prototype (CoT) – Documentation
+# cot prototype 
 
 Overview
 
