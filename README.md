@@ -79,13 +79,15 @@ export OPENAI_API_KEY="your-openai-api-key"
 Running the Assistant
 
 Sync mode:
+```shell
 
-python assistant.py
-
+python main.py
+```
 Async mode:
 
-python assistant.py --async
-
+```shell
+python main.py --async
+```
 Sample Interaction
 
 Enter your prompt: Why is the sky blue?
