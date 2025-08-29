@@ -1,7 +1,7 @@
 
 # cot prototype 
 
-Overview
+## Overview
 
 The Chain of Thought Assistant is a prototype built on top of the OpenAI API that leverages structured prompt engineering to produce more thoughtful and accurate responses. It does so by splitting the response process into two distinct steps:
 	1.	Chain of Thought (CoT) Generation – Think step-by-step through the user prompt.
