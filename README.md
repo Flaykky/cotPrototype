@@ -142,7 +142,6 @@ Make sure you are using openai SDK version >=0.27.0 to access async features.
 
 ⸻
 
-## 📎 License & Attribution
+## LICENSE
 
-This prototype is built for educational and experimental purposes using the OpenAI API. Respect OpenAI’s Usage Guidelines.
-
+Distributed under the MIT License. See [LICENSE](LICENSE) file for details.
